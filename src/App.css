@@ -58,9 +58,9 @@ select {
 }
 
 p {
-  overflow-x: scroll;
+/*   overflow-x: scroll;
   line-break: unset;
-  word-wrap: none;
+  word-wrap: none; */
   font-size: 1.3em;
   background-color: white;
   width: 250px;
