@@ -1,26 +1,65 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
 
-function App() {
+import Form from "./Form";
+import TodosList from "./TodosList";
+
+const App = () => {
+  const [inputText, setInputText] = useState("");
+  const [todos, setTodos] = useState([]);
+  const [value, changeValue] = useState("all");
+  const [filter, setFilter] = useState([]);
+
+  useEffect(() => {
+    getTodos();
+  }, []);
+
+  useEffect(() => {
+    filterHandler();
+    saveTodos();
+  }, [todos, value]);
+
+  const filterHandler = () => {
+    switch (value) {
+      case "completed":
+        setFilter(todos.filter((el) => el.completed !== false));
+        break;
+      case "uncompleted":
+        setFilter(todos.filter((el) => el.completed !== true));
+        break;
+      default:
+        setFilter(todos);
+        break;
+    }
+  };
+
+  const saveTodos = () => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  };
+
+  const getTodos = () => {
+    if (localStorage.getItem("todos") === null) {
+      localStorage.setItem("todos", JSON.stringify([]));
+    } else {
+      let local = JSON.parse(localStorage.getItem("todos"));
+      console.log(local);
+      setTodos(local);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1 className="heading">Singh's Todo List</h1>
+      <Form
+        inputText={inputText}
+        setInputText={setInputText}
+        todos={todos}
+        setTodos={setTodos}
+        changeValue={changeValue}
+      />
+      <TodosList setTodos={setTodos} todos={todos} filter={filter} />
     </div>
   );
-}
+};
 
 export default App;
